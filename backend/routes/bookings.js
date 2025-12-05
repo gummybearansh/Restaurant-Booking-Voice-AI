@@ -1,10 +1,3 @@
-/**
- * routes/bookings.js
- * 
- * This file handles all the API endpoints for bookings.
- * It defines what happens when a user (or our AI agent) sends a request to /api/bookings.
- */
-
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
@@ -17,16 +10,14 @@ router.post('/', async (req, res) => {
     try {
         console.log('📝 Received booking request:', req.body);
 
-        // Generate a unique booking ID
         const bookingId = 'BOOK-' + Date.now();
 
-        // Ensure seatingPreference has a valid value
+
         let seatingPreference = req.body.seatingPreference;
         if (!seatingPreference || seatingPreference.trim() === '') {
             seatingPreference = 'any';
         }
 
-        // Create a new booking document
         const booking = new Booking({
             bookingId: bookingId,
             customerName: req.body.customerName,
@@ -37,11 +28,9 @@ router.post('/', async (req, res) => {
             seatingPreference: seatingPreference
         });
 
-        // Save to database
         const savedBooking = await booking.save();
         console.log('✅ Booking saved successfully:', savedBooking.bookingId);
 
-        // Return the saved booking
         res.status(201).json(savedBooking);
     } catch (error) {
         console.error('❌ Error saving booking:', error);
@@ -57,7 +46,7 @@ router.post('/', async (req, res) => {
 // @access  Public
 router.get('/', async (req, res) => {
     try {
-        const bookings = await Booking.find().sort({ createdAt: -1 }); // Newest first
+        const bookings = await Booking.find().sort({ createdAt: -1 });
         res.json(bookings);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch bookings' });

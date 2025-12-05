@@ -1,31 +1,17 @@
-/**
- * server.js
- * 
- * This is the main entry point for our backend application.
- * It sets up the Express server, connects to MongoDB, and defines our API routes.
- */
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
-// Load environment variables from the parent directory's .env file
-// We use path.resolve to look for .env in the root folder
 const path = require('path');
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-// CORS allows our frontend (and other origins) to talk to this API
 app.use(cors());
-// JSON parser allows us to read the body of POST requests
 app.use(express.json());
 
-// MongoDB Connection
-// We use the connection string from our .env file
 const mongoURI = process.env.MONGO_CONNECTION_STRING;
 
 if (!mongoURI) {
@@ -37,13 +23,10 @@ mongoose.connect(mongoURI, { dbName: 'Restaurant-AI' })
     .then(() => console.log('✅ MongoDB Connected Successfully'))
     .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
-// Basic Route to check if server is running
 app.get('/', (req, res) => {
     res.send('Restaurant Booking API is running...');
 });
 
-// Import Routes
-// We will create this file next. It handles all booking-related logic.
 const bookingsRouter = require('./routes/bookings');
 const { AccessToken } = require('livekit-server-sdk');
 
@@ -75,7 +58,6 @@ app.get('/api/token', async (req, res) => {
     }
 });
 
-// Start the Server
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });

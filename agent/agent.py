@@ -28,6 +28,9 @@ class RestaurantAssistant(Agent):
                 "You are a friendly and helpful restaurant host for 'The Golden Spoon' in Bhopal. "
                 "Your goal is to help users book a table. Be warm, concise and conversational. "
                 "\n"
+                "CRITICAL: This is a VOICE-ONLY conversation. Never use asterisks (*), markdown, bold, "
+                "italics, or any special formatting characters. Speak plain text only.\n"
+                "\n"
                 "CONVERSATION FLOW (follow strictly):\n"
                 "1. Greet the customer warmly\n"
                 "2. Ask for their preferred DATE\n"
@@ -46,7 +49,8 @@ class RestaurantAssistant(Agent):
                 "- When calling create_booking: use YYYY-MM-DD for dates, HH:MM for times\n"
                 "- For seating_preference parameter: use ONLY 'indoor', 'outdoor', or 'any'\n"
                 "- After successful booking, just say the booking is confirmed - do NOT read out the booking ID number\n"
-                "- Be natural and conversational, ask one question at a time"
+                "- Be natural and conversational, ask one question at a time\n"
+                "- Never use asterisks or special characters - speak only plain text"
             ),
         )
 
@@ -64,24 +68,48 @@ class RestaurantAssistant(Agent):
         logger.info(f"Checking weather for {date}")
         api_key = os.getenv("WEATHER_API_KEY")
         if not api_key:
+            logger.error("Weather API key missing from environment variables")
             return "Weather API key missing."
 
         location = "Bhopal" 
         url = f"http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={location}&dt={date}"
+        
+        logger.info(f"Calling WeatherAPI with URL: {url.replace(api_key, 'REDACTED')}")
 
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as response:
                     if response.status == 200:
                         data = await response.json()
+                        logger.info(f"Successfully fetched weather data: {data}")
+                        
+                        if 'forecast' not in data or 'forecastday' not in data['forecast']:
+                            logger.error(f"Unexpected API response structure: {data}")
+                            return f"Weather data not available for {date}. Unable to make seating recommendation."
+                        
+                        if len(data['forecast']['forecastday']) == 0:
+                            logger.error(f"No forecast data available for date: {date}")
+                            return f"Weather forecast not available for {date}."
+                        
                         forecast = data['forecast']['forecastday'][0]['day']
                         condition = forecast['condition']['text'].lower()
                         avg_temp_f = forecast['avgtemp_f']
+                        
+                        logger.info(f"Weather retrieved: {condition}, {avg_temp_f}°F")
                         return f"The forecast for {date} in {location} is {condition} with an average temperature of {avg_temp_f}°F."
                     else:
+                        error_text = await response.text()
+                        logger.error(f"Weather API error: Status {response.status}, Response: {error_text}")
                         return f"Weather API error: {response.status}"
+        except aiohttp.ClientError as e:
+            logger.error(f"Network error while fetching weather: {e}")
+            return f"Failed to check weather due to network error: {str(e)}"
+        except KeyError as e:
+            logger.error(f"Unexpected weather API response format, missing key: {e}")
+            return f"Failed to parse weather data. Please try again."
         except Exception as e:
-            return f"Failed to check weather: {e}"
+            logger.error(f"Unexpected error while checking weather: {e}", exc_info=True)
+            return f"Failed to check weather: {str(e)}"
 
     @llm.function_tool(description="Create a restaurant booking.")
     async def create_booking(
@@ -167,13 +195,14 @@ async def entrypoint(ctx: JobContext):
 
     # Configure plugins BEFORE waiting for participant
     logger.info("� Configuring plugins...")
+    logger.info(" Configuring plugins...")
     stt_plugin = deepgram.STT(model="nova-2-general", api_key=os.getenv("DEEPGRAM_KEY"))
     tts_plugin = deepgram.TTS(model="aura-asteria-en", api_key=os.getenv("DEEPGRAM_KEY"))
     
     llm_plugin = openai.LLM(
         base_url="https://openrouter.ai/api/v1",
         api_key=os.getenv("OPEN_ROUTER_KEY"),
-        model="meta-llama/llama-3.1-70b-instruct",
+        model="amazon/nova-2-lite-v1:free",
     )
 
     logger.info("🎬 Starting agent session...")
