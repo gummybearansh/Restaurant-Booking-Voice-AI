@@ -10,8 +10,9 @@
 
 **Watch the AI voice agent in action:**
 
+[![AI Restaurant Booking Voice Agent Demo](https://img.youtube.com/vi/aqKdOt3Uw9M/maxresdefault.jpg)](https://youtu.be/aqKdOt3Uw9M)
 
-> 📹 [Click here to view the demo video](./Demo%20Video.mp4) (15MB)
+> 📹 **[Watch on YouTube →](https://youtu.be/aqKdOt3Uw9M)**
 
 *The video showcases voice booking, weather integration, and live conversation transcripts.*
 
