@@ -10,7 +10,6 @@
 
 **Watch the AI voice agent in action:**
 
-https://user-images.githubusercontent.com/your-video-id/demo-video.mp4
 
 > 📹 [Click here to view the demo video](./Demo%20Video.mp4) (15MB)
 
