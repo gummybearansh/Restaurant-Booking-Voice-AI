@@ -8,11 +8,13 @@
 
 ## 🎬 Demo
 
-Watch the AI voice agent in action:
+**Watch the AI voice agent in action:**
 
-https://github.com/user-attachments/assets/demo-video.mp4
+https://user-images.githubusercontent.com/your-video-id/demo-video.mp4
 
-![Demo Video](Demo%20Video.mp4)
+> 📹 [Click here to view the demo video](./Demo%20Video.mp4) (15MB)
+
+*The video showcases voice booking, weather integration, and live conversation transcripts.*
 
 ## ✨ Key Features
 
