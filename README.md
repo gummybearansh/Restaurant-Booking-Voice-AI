@@ -47,7 +47,7 @@ An intelligent AI-powered voice agent for restaurant reservations, built with Li
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/restaurant-booking-voice-agent.git
+git clone https://github.com/gummybearansh/restaurant-booking-voice-agent.git
 cd restaurant-booking-voice-agent
 ```
 
@@ -257,7 +257,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 👤 Author
 
-Created by Ansh Tachwani
+Created by Ansh Lachhwani
 
 ## 🙏 Acknowledgments
 
