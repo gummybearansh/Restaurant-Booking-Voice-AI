@@ -10,9 +10,9 @@
 
 Watch the AI voice agent in action:
 
-https://github.com/user-attachments/assets/demo-video.mov
+https://github.com/user-attachments/assets/demo-video.mp4
 
-![Demo Video](Demo%20Video.mov)
+![Demo Video](Demo%20Video.mp4)
 
 ## ✨ Key Features
 
