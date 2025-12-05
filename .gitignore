@@ -1,0 +1,44 @@
+# Environment variables
+.env
+.env.local
+
+# Dependencies
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+.next/
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+.cache/
+
+# Database
+*.db
+*.sqlite
+
+# Python
+*.egg-info/
+.pytest_cache/
+
+# Misc
+.turbo/
+inspector/
